@@ -50,13 +50,18 @@ def series_download(args: List[str]):
     id, count, offset = parse_id_count_offset(args)
 
     s = login()
+    ser = tube.get_series(s, id)
+    title = tube.get_series_title(ser)
+    print(f">> series: {title}")
+
     eps = tube.get_series_episodes(s, id, count, offset)
 
     for i, ep in enumerate(eps):
+        title = tube.get_episode_title(ep)
         url = tube.get_episode_download_url(ep)
-        *_, name = url.rsplit("/", 1)
-        print(f">> downloading [{i+1: 2d} / {len(eps): 2d}] {name}")
-        subprocess.run(["curl", "--progress-bar", url, "-o", name])
+        filename = tube.get_episode_download_filename(ep)
+        print(f">> downloading [{i+1: 2d} / {len(eps): 2d}] {title}")
+        subprocess.run(["curl", "--progress-bar", url, "-o", filename])
 
 def episode_download_url(args: List[str]):
     id = parse_id(args)
