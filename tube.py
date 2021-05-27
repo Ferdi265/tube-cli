@@ -8,7 +8,7 @@ def login(username: str, password: str) -> Session:
 
     r1 = s.get("https://tube.tugraz.at/Shibboleth.sso/Login?target=/paella/ui/index.html")
     if r1.status_code != 200:
-        raise ValueError(f"failed to load login page, error code: {r1.status_code}")
+        raise ValueError(f"failed to load login page, error code: {r1.status_code} (this should not happen)")
 
     r2 = s.post(r1.url, data = {
         "lang": "de",
@@ -17,10 +17,10 @@ def login(username: str, password: str) -> Session:
         "j_password": password
     }, headers = { "referer": r1.url })
     if r2.status_code != 200:
-        raise ValueError(f"failed to login, error code: {r2.status_code}")
+        raise ValueError(f"failed to login, error code: {r2.status_code} (this should not happen)")
 
     if r2.url != "https://tube.tugraz.at/paella/ui/index.html":
-        raise ValueError(f"failed to login, URL does not match: {r2.url}")
+        raise ValueError(f"failed to login, URL does not match: {r2.url} (incorrect password?)")
 
     return s
 
