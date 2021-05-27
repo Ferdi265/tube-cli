@@ -1,6 +1,6 @@
 # `tube-cli`
 
-A small script for downloading videos from [tube.tugraz.at](https://tube.tugraz.at).
+A small Python script for downloading videos from [tube.tugraz.at](https://tube.tugraz.at).
 
 ## Installation
 
