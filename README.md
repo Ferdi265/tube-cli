@@ -5,7 +5,8 @@ A small Python script for downloading videos from [tube.tugraz.at](https://tube.
 ## Installation
 
 This script requires the `requests` package. Install the required dependencies
-with `pip install -r requirements.txt`.
+with `pip install -r requirements.txt`. The `series-download` and
+`episode-download` commands require `curl` to be installed.
 
 ## Usage
 
