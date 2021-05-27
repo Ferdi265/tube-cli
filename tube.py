@@ -58,7 +58,7 @@ def get_episode(s: Session, id: str, count: int = 100, offset: int = 0) -> Dict[
     if r.status_code != 200:
         raise ValueError(f"failed to load episodes, error code: {r.status_code}")
 
-    return json.loads(r.text)["search-results"]["result"][0]
+    return json.loads(r.text)["search-results"]["result"]
 
 def get_episode_download_url(episode: Dict[str, Any]) -> str:
     return episode['mediapackage']['media']['track'][0]['url']

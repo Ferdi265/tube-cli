@@ -62,14 +62,14 @@ def episode_download_url(args: List[str]):
     id = parse_id(args)
 
     s = login()
-    ep = tube.get_episode(s, id, count, offset)
+    ep = tube.get_episode(s, id)
     print(tube.get_episode_download_url(ep))
 
 def episode_download(args: List[str]):
     id = parse_id(args)
 
     s = login()
-    ep = tube.get_episodes(s, id, count, offset)
+    ep = tube.get_episode(s, id)
     url = tube.get_episode_download_url(ep)
     *_, name = url.rsplit("/", 1)
     print(f">> downloading {name}")
