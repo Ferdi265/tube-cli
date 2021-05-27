@@ -36,7 +36,7 @@ def get_series(s: Session, id: str, count: int = 100, sort: str = "TITLE") -> Di
 
     return json.loads(r.text)
 
-def get_episodes(s: Session, id: str, count: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
+def get_series_episodes(s: Session, id: str, count: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
     r = s.get("https://tube.tugraz.at/search/episode.json", params = {
         "sid": id,
         "limit": count,
@@ -47,6 +47,18 @@ def get_episodes(s: Session, id: str, count: int = 100, offset: int = 0) -> List
         raise ValueError(f"failed to load episodes, error code: {r.status_code}")
 
     return json.loads(r.text)["search-results"]["result"]
+
+def get_episode(s: Session, id: str, count: int = 100, offset: int = 0) -> Dict[str, Any]:
+    r = s.get("https://tube.tugraz.at/search/episode.json", params = {
+        "id": id,
+        "limit": count,
+        "offset": offset
+    })
+
+    if r.status_code != 200:
+        raise ValueError(f"failed to load episodes, error code: {r.status_code}")
+
+    return json.loads(r.text)["search-results"]["result"][0]
 
 def get_episode_download_url(episode: Dict[str, Any]) -> str:
     return episode['mediapackage']['media']['track'][0]['url']

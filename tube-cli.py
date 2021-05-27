@@ -6,13 +6,6 @@ import subprocess
 import tube
 import sys
 
-def usage():
-    print("usage: tube-cli.py [command] [args]")
-    print("COMMANDS:")
-    print("- download-episode-urls <id> [count] [offset]")
-    print("- download-episodes <id> [count] [offset]")
-    sys.exit(1)
-
 def login() -> Session:
     username = input("username: ")
     password = getpass("password: ")
@@ -36,20 +29,28 @@ def parse_id_count_offset(args: List[str]) -> Tuple[str, int, int]:
 
     return id, count, offset
 
-def download_episode_urls(args: List[str]):
+def parse_id(args: List[str]) -> str:
+    if len(args) != 1:
+        usage()
+
+    id = args[0]
+
+    return id
+
+def series_download_urls(args: List[str]):
     id, count, offset = parse_id_count_offset(args)
 
     s = login()
-    eps = tube.get_episodes(s, id, count, offset)
+    eps = tube.get_series_episodes(s, id, count, offset)
 
     for ep in eps:
         print(tube.get_episode_download_url(ep))
 
-def download_episodes(args: List[str]):
+def series_download(args: List[str]):
     id, count, offset = parse_id_count_offset(args)
 
     s = login()
-    eps = tube.get_episodes(s, id, count, offset)
+    eps = tube.get_series_episodes(s, id, count, offset)
 
     for i, ep in enumerate(eps):
         url = tube.get_episode_download_url(ep)
@@ -57,18 +58,47 @@ def download_episodes(args: List[str]):
         print(f">> downloading [{i+1: 2d} / {len(eps): 2d}] {name}")
         subprocess.run(["curl", "--progress-bar", url, "-o", name])
 
+def episode_download_url(args: List[str]):
+    id = parse_id(args)
+
+    s = login()
+    ep = tube.get_episode(s, id, count, offset)
+    print(tube.get_episode_download_url(ep))
+
+def episode_download(args: List[str]):
+    id = parse_id(args)
+
+    s = login()
+    ep = tube.get_episodes(s, id, count, offset)
+    url = tube.get_episode_download_url(ep)
+    *_, name = url.rsplit("/", 1)
+    print(f">> downloading {name}")
+    subprocess.run(["curl", "--progress-bar", url, "-o", name])
+
+def usage():
+    print("usage: tube-cli.py [command] [args]")
+    print("COMMANDS:")
+    print("- series-download-urls <sid> [count] [offset]")
+    print("- series-download <sid> [count] [offset]")
+    print("- episode-download-url <id>")
+    print("- episode-download <id>")
+    sys.exit(1)
+
 def main(args: List[str]):
     if len(args) < 1:
         usage()
 
     subcmd, args = args[0], args[1:]
-    if subcmd == "download-episode-urls":
-        download_episode_urls(args)
-    elif subcmd == "download-episodes":
-        download_episodes(args)
+    if subcmd == "series-download-urls":
+        series_download_urls(args)
+    elif subcmd == "series-download":
+        series_download(args)
+    elif subcmd == "episode-download-url":
+        episode_download_url(args)
+    elif subcmd == "episode-download":
+        episode_download(args)
     else:
         usage()
-
 
 if __name__ == '__main__':
     args = sys.argv[1:]
