@@ -51,17 +51,20 @@ def get_series_episodes(s: Session, id: str, count: int = 100, offset: int = 0) 
 def get_series_title(series: Dict[str, Any]) -> str:
     return series["title"][0]["value"]
 
-def get_episode(s: Session, id: str, count: int = 100, offset: int = 0) -> Dict[str, Any]:
+def get_episode(s: Session, id: str) -> Dict[str, Any]:
     r = s.get("https://tube.tugraz.at/search/episode.json", params = {
         "id": id,
-        "limit": count,
-        "offset": offset
+        "limit": 1,
+        "offset": 0
     })
 
     if r.status_code != 200:
         raise ValueError(f"failed to load episodes, error code: {r.status_code}")
 
     return json.loads(r.text)["search-results"]["result"]
+
+def get_episode_id(episode: Dict[str, Any]) -> str:
+    return episode["id"]
 
 def get_episode_title(episode: Dict[str, Any]) -> str:
     return episode["dcTitle"]
