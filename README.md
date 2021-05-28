@@ -4,8 +4,7 @@ A small Python script for downloading videos from [tube.tugraz.at](https://tube.
 
 ## THIS REPOSITORY IS OBSOLETE
 
-This repository is obsoleted by the `youtube-dl` support for
-[tube.tugraz.at](https://tube.tugraz.at) in
+This repository is obsoleted by the `youtube-dl` support for tube.tugraz.at
 [Ferdi265/youtube-dl](https://github.com/Ferdi265/youtube-dl/tree/tubetugraz).
 
 ## Installation
